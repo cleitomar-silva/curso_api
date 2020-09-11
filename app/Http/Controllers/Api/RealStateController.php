@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Real_State;
 use App\Http\Requests\RealStateRequest;
+use App\Api\ApiMessages;
 
 class RealStateController extends Controller
 {
@@ -36,13 +37,19 @@ class RealStateController extends Controller
     public function store(RealStateRequest $request)
     {
         $data = $request->all();
-        $real_state = $this->real_state->create($data);
+        try{
+            $real_state = $this->real_state->create($data);
 
-        return response()->json([
-            'data' => [
-                'msg' => 'Imóvel cadastrado com sucesso!'
-            ]
-        ], 200);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Imóvel cadastrado com sucesso!'
+                ]
+            ], 200);
+
+        }catch(\Exception $e){
+            $message = new ApiMessages($e->getMEssage());
+            return response()->json($message->getMEssage());
+        }
     }
 
     /**
@@ -53,15 +60,22 @@ class RealStateController extends Controller
      */
     public function show($id)
     {
+        try{
+            $real_state = $this->real_state->find($id);
 
-        $real_state = $this->real_state->find($id);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Imóvel encontrado com sucesso!',
+                    'data' => $real_state
+                ]
+            ], 200);
 
-        return response()->json([
-            'data' => [
-                'msg' => 'Imóvel encontrado com sucesso!',
-                'data' => $real_state
-            ]
-        ], 200);
+        }catch(\Exception $e){
+            $message = new ApiMessages($e->getMEssage());
+            return response()->json($message->getMEssage());
+        }
+
+
     }
 
     /**
@@ -74,14 +88,19 @@ class RealStateController extends Controller
     public function update(RealStateRequest $request, $id)
     {
         $data = $request->all();
-        $real_state = $this->real_state->find($id);
-        $real_state->update($data);
+        try{
+            $real_state = $this->real_state->find($id);
+            $real_state->update($data);
 
-        return response()->json([
-            'data' => [
-                'msg' => 'Imóvel atualizado com sucesso!'
-            ]
-        ], 200);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Imóvel atualizado com sucesso!'
+                ]
+            ], 200);
+        }catch(\Exception $e){
+            $message = new ApiMessages($e->getMEssage());
+            return response()->json($message->getMEssage());
+        }
     }
 
     /**
@@ -92,13 +111,18 @@ class RealStateController extends Controller
      */
     public function destroy($id)
     {
-        $real_state = $this->real_state->find($id);
-        $real_state->delete();
+        try{
+            $real_state = $this->real_state->find($id);
+            $real_state->delete();
 
-        return response()->json([
-            'data' => [
-                'msg' => 'Imóvel removido com sucesso!'
-            ]
-        ], 200);
+            return response()->json([
+                'data' => [
+                    'msg' => 'Imóvel removido com sucesso!'
+                ]
+            ], 200);
+        }catch(\Exception $e){
+            $message = new ApiMessages($e->getMEssage());
+            return response()->json($message->getMEssage());
+        }
     }
 }
