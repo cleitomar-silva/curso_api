@@ -33,4 +33,10 @@ Route::prefix('v1')->namespace('Api')->group(function(){
 
     });
 
+    Route::name('categoria.')->group(function(){
+
+        Route::resource('categoria', 'CategoryController');
+
+    });
+
 });
